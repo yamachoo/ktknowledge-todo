@@ -6,6 +6,6 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class KtknowledgeTodoApplication
 
-fun main(args: Array<String>) {
-	runApplication<KtknowledgeTodoApplication>(*args)
+fun main(vararg args: String) {
+    runApplication<KtknowledgeTodoApplication>(*args)
 }
