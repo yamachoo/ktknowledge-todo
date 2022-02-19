@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.6.3"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("nu.studer.jooq") version "7.1.1"
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
 }
@@ -25,6 +26,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	jooqGenerator("mysql:mysql-connector-java")
+	jooqGenerator("jakarta.xml.bind:jakarta.xml.bind-api:3.0.1")
 	runtimeOnly("mysql:mysql-connector-java")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
@@ -39,4 +42,35 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+jooq {
+	configurations {
+		create("main") {
+			jooqConfiguration.apply {
+				jdbc.apply {
+					driver = "com.mysql.cj.jdbc.Driver"
+					url = System.getenv("MYSQL_URL")
+					user = System.getenv("MYSQL_USER")
+					password = System.getenv("MYSQL_PASSWORD")
+				}
+				generator.apply {
+					name = "org.jooq.codegen.KotlinGenerator"
+					database.apply {
+						name = "org.jooq.meta.mysql.MySQLDatabase"
+						inputSchema = System.getenv("MYSQL_DB_NAME")
+						excludes = "flyway_schema_history"
+					}
+					generate.apply {
+						isDeprecated = false
+						isTables = true
+					}
+					target.apply {
+						packageName = "com.example.ktknowledgeTodo.infra.jooq"
+						directory = "${buildDir}/generated/source/jooq/main"
+					}
+				}
+			}
+		}
+	}
 }
