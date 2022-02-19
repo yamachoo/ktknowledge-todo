@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.6.3"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("io.gitlab.arturbosch.detekt").version("1.19.0")
 	id("nu.studer.jooq") version "7.1.1"
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
@@ -26,6 +27,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 	jooqGenerator("mysql:mysql-connector-java")
 	jooqGenerator("jakarta.xml.bind:jakarta.xml.bind-api:3.0.1")
 	runtimeOnly("mysql:mysql-connector-java")
@@ -42,6 +44,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+detekt {
+	source = files(".")
+	autoCorrect = true
 }
 
 jooq {
