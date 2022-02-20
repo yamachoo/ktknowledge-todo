@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("io.gitlab.arturbosch.detekt").version("1.19.0")
+    id("org.flywaydb.flyway") version "8.0.1"
     id("nu.studer.jooq") version "7.1.1"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
@@ -22,7 +23,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
@@ -49,6 +49,12 @@ tasks.withType<Test> {
 detekt {
     source = files(".")
     autoCorrect = true
+}
+
+flyway {
+    url = System.getenv("MYSQL_URL")
+    user = System.getenv("MYSQL_USER")
+    password = System.getenv("MYSQL_PASSWORD")
 }
 
 jooq {
@@ -80,4 +86,8 @@ jooq {
             }
         }
     }
+}
+
+tasks.named("generateJooq") {
+    dependsOn(tasks.named("flywayMigrate"))
 }
