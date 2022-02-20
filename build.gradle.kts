@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jooq.meta.jaxb.ForcedType
 
 plugins {
     id("org.springframework.boot") version "2.6.3"
@@ -78,6 +79,14 @@ jooq {
                         name = "org.jooq.meta.mysql.MySQLDatabase"
                         inputSchema = System.getenv("MYSQL_DB_NAME")
                         excludes = "flyway_schema_history"
+                        forcedTypes.addAll(
+                            listOf(
+                                ForcedType().apply {
+                                    name = "boolean"
+                                    includeTypes = "(?i:TINYINT\\(1\\))"
+                                }
+                            )
+                        )
                     }
                     generate.apply {
                         isDeprecated = false
