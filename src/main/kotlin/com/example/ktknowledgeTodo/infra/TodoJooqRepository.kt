@@ -35,4 +35,14 @@ class TodoJooqRepository(private val dsl: DSLContext) : TodoRepository {
             record.updatedAt!!.convertToOffsetDateTime()
         )
     }
+
+    override fun update(todo: Todo) {
+        dsl.update(TODOS)
+            .set(TODOS.TITLE, todo.title)
+            .set(TODOS.DONE, todo.done)
+            .set(TODOS.CREATED_AT, todo.createdAt.convertToLocalDateTime())
+            .set(TODOS.UPDATED_AT, todo.updatedAt.convertToLocalDateTime())
+            .where(TODOS.ID.eq(todo.id))
+            .execute()
+    }
 }
