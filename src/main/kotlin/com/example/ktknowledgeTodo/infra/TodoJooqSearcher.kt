@@ -19,6 +19,15 @@ class TodoJooqSearcher(private val dsl: DSLContext) : TodoSearcher {
         return records.map { it.convertToTodo() }
     }
 
+    override fun findOneById(id: Int): Todo? {
+        val record = dsl.select()
+            .from(TODOS)
+            .where(TODOS.ID.eq(id))
+            .fetchOne()
+
+        return record?.convertToTodo()
+    }
+
     private fun Record.convertToTodo() = Todo(
         this.get(TODOS.ID)!!,
         this.get(TODOS.TITLE)!!,
