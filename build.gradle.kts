@@ -18,6 +18,8 @@ repositories {
     mavenCentral()
 }
 
+val graphqlKotlinVersion = "5.3.2"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -26,6 +28,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("com.expediagroup:graphql-kotlin-spring-server:$graphqlKotlinVersion")
+    implementation("com.expediagroup:graphql-kotlin-hooks-provider:$graphqlKotlinVersion")
+    implementation("com.graphql-java:graphql-java-extended-scalars:17.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
     jooqGenerator("mysql:mysql-connector-java")

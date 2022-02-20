@@ -3,3 +3,7 @@ spring:
     url: ${MYSQL_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+
+graphql:
+  packages:
+    - "com.example.ktknowledgeTodo.presentation"
